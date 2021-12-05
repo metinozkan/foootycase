@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Image, Title, Col, Button, createStyles, Collapse } from '@mantine/core';
 import CustomColComponent from './CustomColComponent';
+import StatsCard from './StatsCard';
 
 const useStyles = createStyles((theme) => ({
 	hiddenMd: {
@@ -43,7 +44,7 @@ const PlayerCard = () => {
 						}}
 					/>
 				</Col>
-				<Col span={2}>
+				<Col span={3}>
 					<Title order={5}>Metin</Title>
 					<Title order={5}>özkan</Title>
 				</Col>
@@ -66,8 +67,8 @@ const PlayerCard = () => {
 			</Grid>
 
 			<Grid className={'rowFlexCenter'}>
-				<Collapse in={opened}>
-					<div>Collapse</div>
+				<Collapse in={opened} style={{ width: '80%', padding: 8 }}>
+					<StatsCard />
 				</Collapse>
 			</Grid>
 		</>
