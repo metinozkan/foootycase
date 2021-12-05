@@ -1,14 +1,19 @@
-import { Grid, Image } from "@mantine/core";
+import { Grid, Image, Title } from "@mantine/core";
 import React from "react";
 
 const TeamCard = () => {
   return (
-    <Grid>
-      <Image
-        width={200}
-        height={80}
-        src="https://images.unsplash.com/long-image-url-was-here.jpg"
-      />
+    <Grid
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: 12,
+      }}
+    >
+      <Image width={80} height={80} src="https://picsum.photos/200/300" />
+      <Title order={2}>Beşiktaş</Title>
     </Grid>
   );
 };
