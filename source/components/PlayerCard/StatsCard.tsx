@@ -7,11 +7,11 @@ interface StatsCardProps {
 	stats: Stats;
 }
 
-const StatsRow = ({ title, value }: { title: string; value: number }) => {
+const StatsRow = ({ title, value, color }: { title: string; value: number; color?: string }) => {
 	console.log('title', title, value);
 	return (
 		<Grid className="rowFlexSpaceBetween">
-			<Text color="gray">{title}</Text>
+			<Text color={color ? color : 'gray'}>{title}</Text>
 			<Text weight={700}>{value}</Text>
 		</Grid>
 	);
@@ -32,9 +32,9 @@ const StatsCard = ({ stats }: StatsCardProps) => {
 			<Col span={4}>
 				<StatsRow title="Key passes" value={stats.keyPasses} />
 				<StatsRow title="Smart Passes" value={stats.smartPasses} />
-				<StatsRow title="Touch in Box" value={stats.touchInBox} />{' '}
-				<StatsRow title="Yellow Cards" value={stats.yellowCards} />{' '}
-				<StatsRow title="Red Cards" value={stats.redCards} />
+				<StatsRow title="Touch in Box" value={stats.touchInBox} />
+				<StatsRow title="Yellow Cards" color="red" value={stats.yellowCards} />
+				<StatsRow title="Red Cards" color="yellow" value={stats.redCards} />
 			</Col>
 		</Grid>
 	);

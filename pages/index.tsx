@@ -1,5 +1,7 @@
 import React from 'react';
-import { Center, Grid, SimpleGrid, Title, LoadingOverlay, Loader } from '@mantine/core';
+import { useRouter } from 'next/router';
+
+import { Center, Grid, SimpleGrid, Title, LoadingOverlay, Loader, Button } from '@mantine/core';
 import type { NextPage } from 'next';
 import PlayerCard from '../source/components/PlayerCard/PlayerCard';
 import TeamCard from '../source/components/TeamCard';
@@ -8,7 +10,7 @@ import { PlayerDetail, TeamDetail } from '../source/types/types';
 import LoaderContainer from '../source/components/LoaderContainer';
 
 const Home: NextPage = () => {
-	const tempArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+	const router = useRouter();
 	const [selectedTeam, setSelectedTeam] = React.useState<number>();
 	const [loading, setLoading] = React.useState(true);
 	const [loadingPlayers, setLoadingPlayers] = React.useState(true);
@@ -72,7 +74,26 @@ const Home: NextPage = () => {
 					marginTop: 8,
 				}}
 			>
-				<Title order={1}>Teams</Title>
+				<Grid
+					style={{
+						display: 'flex',
+						flexDirection: 'row',
+						justifyContent: 'space-between',
+						alignItems: 'center',
+						padding: 8,
+						marginTop: 8,
+						width: '100%',
+					}}
+				>
+					<Title order={1}>Teams</Title>
+					<Button
+						onClick={() => {
+							router.push('comparison');
+						}}
+					>
+						Go Favorite
+					</Button>
+				</Grid>
 				<Grid>
 					{teams &&
 						teams.map((team: TeamDetail) => {

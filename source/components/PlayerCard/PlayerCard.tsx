@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import superagent from 'superagent';
 
-import { Grid, Image, Title, Col, Button, createStyles, Collapse } from '@mantine/core';
+import { Grid, Image, Title, Col, Button, createStyles, Collapse, ActionIcon } from '@mantine/core';
 import CustomColComponent from './CustomColComponent';
 import StatsCard from './StatsCard';
 import { PlayerDetail, Stats } from '../../types/types';
 import LoaderContainer from '../LoaderContainer';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { connect } from 'react-redux';
+import { FavoriteAction } from '../../data/actions/FavoriteAction';
 
 const useStyles = createStyles((theme) => ({
 	hiddenMd: {
@@ -18,9 +21,10 @@ const useStyles = createStyles((theme) => ({
 
 interface PlayerCardProps {
 	playerDetail: PlayerDetail;
+	Favorites: number[];
 }
 
-const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
+const PlayerCard = ({ playerDetail, Favorites }: PlayerCardProps) => {
 	const { classes } = useStyles();
 	const [opened, setOpen] = useState(false);
 	const [stats, setStats] = useState<Stats>();
@@ -66,7 +70,7 @@ const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
 			setOpen(false);
 		}
 	};
-
+	console.log('Favorite', Favorites);
 	return (
 		<>
 			<Grid
@@ -79,6 +83,7 @@ const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
 					width: '100%',
 					cursor: 'pointer',
 				}}
+				className="playerCardContainer"
 				onClick={() => openStatsArea(playerDetail.id)}
 			>
 				<Col span={1}>
@@ -119,7 +124,22 @@ const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
 				</Col>
 
 				<Col span={2}>
-					<Button>Fav</Button>
+					<ActionIcon
+						onClick={(e: React.MouseEvent) => {
+							e.stopPropagation();
+							if (Favorites.indexOf(playerDetail.id) == -1)
+								FavoriteAction.addFavorite(playerDetail.id);
+							else {
+								FavoriteAction.deleteFavorite(playerDetail.id);
+							}
+						}}
+					>
+						{Favorites.indexOf(playerDetail.id) == -1 ? (
+							<AiOutlineHeart size={35} />
+						) : (
+							<AiFillHeart size={35} color="red" />
+						)}
+					</ActionIcon>
 				</Col>
 			</Grid>
 
@@ -140,4 +160,8 @@ const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
 	);
 };
 
-export default PlayerCard;
+const mapStateToProps = (state: any) => ({
+	Favorites: state.Favorite.favorites,
+});
+
+export default connect(mapStateToProps)(PlayerCard);

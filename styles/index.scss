@@ -18,3 +18,9 @@
 	align-items: center;
 	width: 100%;
 }
+
+.playerCardContainer {
+	&:hover {
+		background-color: #f1f1f1;
+	}
+}
