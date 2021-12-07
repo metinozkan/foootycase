@@ -38,9 +38,12 @@ const Home: NextPage = () => {
 	};
 
 	React.useEffect(() => {
-		setLoadingPlayers(true);
-		getSelectedTeamPlayers();
+		if (selectedTeam) {
+			setLoadingPlayers(true);
+			getSelectedTeamPlayers();
+		}
 	}, [selectedTeam]);
+
 	React.useEffect(() => {
 		getTeams();
 	}, []);

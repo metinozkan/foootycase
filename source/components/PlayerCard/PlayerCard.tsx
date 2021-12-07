@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import superagent from 'superagent';
+
 import { Grid, Image, Title, Col, Button, createStyles, Collapse } from '@mantine/core';
 import CustomColComponent from './CustomColComponent';
 import StatsCard from './StatsCard';
-import { PlayerDetail } from '../../types/types';
+import { PlayerDetail, Stats } from '../../types/types';
+import LoaderContainer from '../LoaderContainer';
 
 const useStyles = createStyles((theme) => ({
 	hiddenMd: {
@@ -20,6 +23,9 @@ interface PlayerCardProps {
 const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
 	const { classes } = useStyles();
 	const [opened, setOpen] = useState(false);
+	const [stats, setStats] = useState<Stats>();
+	const [selectedPlayer, setSelectedPlayer] = useState<number>();
+	const [loading, setLoading] = useState(false);
 
 	const imageColor =
 		playerDetail.role.code3 == 'DEF'
@@ -36,6 +42,31 @@ const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
 		: '';
 	const noInformationForCountry = birthCountryName == '' && passportCountryName == '';
 
+	const getStats = (playerId: number) => {
+		superagent
+			.get(` https://mock-foooty-api.herokuapp.com/players/${playerId}/stats`)
+			.set('Accept', 'application/json')
+			.end((error, response) => {
+				if (error) {
+					setLoading(false);
+					return;
+				}
+				setStats(response.body.stats);
+				setLoading(false);
+			});
+	};
+
+	const openStatsArea = (playerId: number) => {
+		if (!opened) {
+			setLoading(true);
+			setSelectedPlayer(playerId);
+			setOpen(true);
+			getStats(playerId);
+		} else {
+			setOpen(false);
+		}
+	};
+
 	return (
 		<>
 			<Grid
@@ -48,7 +79,7 @@ const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
 					width: '100%',
 					cursor: 'pointer',
 				}}
-				onClick={() => setOpen(!opened)}
+				onClick={() => openStatsArea(playerDetail.id)}
 			>
 				<Col span={1}>
 					<Image
@@ -94,7 +125,15 @@ const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
 
 			<Grid className={'rowFlexCenter'}>
 				<Collapse in={opened} style={{ width: '80%', padding: 8 }}>
-					<StatsCard />
+					{!loading ? (
+						stats ? (
+							<StatsCard stats={stats} />
+						) : (
+							<div className="rowFlexCenter"> No information</div>
+						)
+					) : (
+						<LoaderContainer />
+					)}
 				</Collapse>
 			</Grid>
 		</>
