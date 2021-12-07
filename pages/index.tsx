@@ -1,11 +1,52 @@
-import { Center, Grid, SimpleGrid, Title } from '@mantine/core';
+import React from 'react';
+import { Center, Grid, SimpleGrid, Title, LoadingOverlay, Loader } from '@mantine/core';
 import type { NextPage } from 'next';
 import PlayerCard from '../source/components/PlayerCard/PlayerCard';
 import TeamCard from '../source/components/TeamCard';
+import superagent from 'superagent';
+import { PlayerDetail, TeamDetail } from '../source/types/types';
+import LoaderContainer from '../source/components/LoaderContainer';
 
 const Home: NextPage = () => {
 	const tempArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
-	return (
+	const [selectedTeam, setSelectedTeam] = React.useState<number>();
+	const [loading, setLoading] = React.useState(true);
+	const [loadingPlayers, setLoadingPlayers] = React.useState(true);
+
+	const [teams, setTeamms] = React.useState<TeamDetail[]>();
+	const [players, setPlayers] = React.useState<PlayerDetail[]>();
+
+	const getTeams = () => {
+		superagent
+			.get('https://mock-foooty-api.herokuapp.com/teams')
+			.set('Accept', 'application/json')
+			.end((error, response) => {
+				setTeamms(response.body.teams);
+				setSelectedTeam(response.body.teams[0].id);
+				setLoading(false);
+			});
+	};
+
+	const getSelectedTeamPlayers = () => {
+		superagent
+			.get(` https://mock-foooty-api.herokuapp.com/teams/${selectedTeam}/players`)
+			.set('Accept', 'application/json')
+			.end((error, response) => {
+				setPlayers(response.body.players);
+				setLoadingPlayers(false);
+			});
+	};
+
+	React.useEffect(() => {
+		setLoadingPlayers(true);
+		getSelectedTeamPlayers();
+	}, [selectedTeam]);
+	React.useEffect(() => {
+		getTeams();
+	}, []);
+	return loading ? (
+		<LoadingOverlay visible={loading} />
+	) : (
 		<Center
 			style={{
 				display: 'flex',
@@ -30,9 +71,16 @@ const Home: NextPage = () => {
 			>
 				<Title order={1}>Teams</Title>
 				<Grid>
-					{tempArr.map((item) => {
-						return <TeamCard />;
-					})}
+					{teams &&
+						teams.map((team: TeamDetail) => {
+							return (
+								<TeamCard
+									teamDetail={team}
+									setSelectedTeam={setSelectedTeam}
+									selectedTeam={selectedTeam}
+								/>
+							);
+						})}
 				</Grid>
 			</Grid>
 			<Grid
@@ -59,9 +107,14 @@ const Home: NextPage = () => {
 						width: '100%',
 					}}
 				>
-					{tempArr.map((item) => {
-						return <PlayerCard />;
-					})}
+					{loadingPlayers ? (
+						<LoaderContainer />
+					) : (
+						players &&
+						players.map((player: PlayerDetail) => {
+							return <PlayerCard playerDetail={player} />;
+						})
+					)}
 				</Grid>
 			</Grid>
 		</Center>

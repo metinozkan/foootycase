@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Image, Title, Col, Button, createStyles, Collapse } from '@mantine/core';
 import CustomColComponent from './CustomColComponent';
 import StatsCard from './StatsCard';
+import { PlayerDetail } from '../../types/types';
 
 const useStyles = createStyles((theme) => ({
 	hiddenMd: {
@@ -12,9 +13,28 @@ const useStyles = createStyles((theme) => ({
 	},
 }));
 
-const PlayerCard = () => {
+interface PlayerCardProps {
+	playerDetail: PlayerDetail;
+}
+
+const PlayerCard = ({ playerDetail }: PlayerCardProps) => {
 	const { classes } = useStyles();
 	const [opened, setOpen] = useState(false);
+
+	const imageColor =
+		playerDetail.role.code3 == 'DEF'
+			? 'green'
+			: playerDetail.role.code3 == 'MID'
+			? 'blue'
+			: 'red';
+
+	const age = playerDetail.birthDate ? 2021 - Number(playerDetail.birthDate.split('-')[0]) : '-';
+
+	const birthCountryName = playerDetail.birthArea.name ? `${playerDetail.birthArea.name}, ` : '';
+	const passportCountryName = playerDetail.passportArea.name
+		? `${playerDetail.passportArea.name}`
+		: '';
+	const noInformationForCountry = birthCountryName == '' && passportCountryName == '';
 
 	return (
 		<>
@@ -35,32 +55,38 @@ const PlayerCard = () => {
 						width={50}
 						height={50}
 						radius={25}
-						src="https://picsum.photos/200/300"
+						src={playerDetail.image}
 						style={{
-							border: '1px solid aqua',
-							borderRadius: 25,
-							height: 52,
-							width: 52,
+							border: `2px solid ${imageColor}`,
+							borderRadius: 30,
+							height: 60,
+							width: 60,
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'flex-end',
 						}}
 					/>
 				</Col>
 				<Col span={3}>
-					<Title order={5}>Metin</Title>
-					<Title order={5}>özkan</Title>
+					<Title order={5}>{playerDetail.firstName}</Title>
+					<Title order={5}>{playerDetail.lastName}</Title>
 				</Col>
 				<Col span={2} className={classes.hiddenMd}>
-					<Title order={5}>Countries</Title>
+					<Title order={5}>
+						{noInformationForCountry
+							? 'No information'
+							: `${birthCountryName} ${passportCountryName} `}
+					</Title>
 				</Col>
 				<Col span={2}>
-					<Title order={5}>Age</Title>
+					<Title order={5}>{age}</Title>
 				</Col>
 				<Col span={2} className={classes.hiddenMd}>
-					<Title order={5}>Foot</Title>
+					<Title order={5}>
+						{playerDetail.foot ? playerDetail.foot : 'No information'}
+					</Title>
 				</Col>
 
-				{/* <Col span={1}>
-				<Title order={5}>Burası biraz şov</Title>
-			</Col> */}
 				<Col span={2}>
 					<Button>Fav</Button>
 				</Col>
