@@ -10,15 +10,64 @@ import { PlayerDetail, TeamDetail } from '../source/types/types';
 import LoaderContainer from '../source/components/LoaderContainer';
 import { BrowserStorage } from '../source/BrowserStorage';
 
+import { createStyles } from '@mantine/core';
+
+const useStyles = createStyles((theme, _params, getRef) => {
+	return {
+		container: {
+			display: 'flex',
+			flexDirection: 'column',
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start',
+			padding: 8,
+			width: '100%',
+			paddingRight: 40,
+			paddingLeft: 40,
+		},
+
+		wrapper: {
+			display: 'flex',
+			flexDirection: 'column',
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start',
+			padding: 8,
+			marginTop: 8,
+
+			width: '100%',
+		},
+
+		teamsWrapper: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			padding: 8,
+			marginTop: 8,
+			width: '100%',
+		},
+
+		playersWrapper: {
+			display: 'flex',
+			flexDirection: 'column',
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start',
+			padding: 8,
+			marginTop: 8,
+			width: '100%',
+		},
+	};
+});
+
 const Home: NextPage = () => {
 	const router = useRouter();
+	const { classes } = useStyles();
+
 	const [selectedTeam, setSelectedTeam] = React.useState<number>();
 	const [loading, setLoading] = React.useState(true);
 	const [loadingPlayers, setLoadingPlayers] = React.useState(true);
 
 	const [teams, setTeamms] = React.useState<TeamDetail[]>();
 	const [players, setPlayers] = React.useState<PlayerDetail[]>();
-	const localStorageComparisonPlayers: any[] | null = BrowserStorage.getItem('comparisonPlayers');
 
 	const getTeams = () => {
 		superagent
@@ -54,39 +103,9 @@ const Home: NextPage = () => {
 	return loading ? (
 		<LoadingOverlay visible={loading} />
 	) : (
-		<Center
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				justifyContent: 'flex-start',
-				alignItems: 'flex-start',
-				padding: 8,
-				width: '100%',
-				paddingRight: 40,
-				paddingLeft: 40,
-			}}
-		>
-			<Grid
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'flex-start',
-					alignItems: 'flex-start',
-					padding: 8,
-					marginTop: 8,
-				}}
-			>
-				<Grid
-					style={{
-						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						padding: 8,
-						marginTop: 8,
-						width: '100%',
-					}}
-				>
+		<Center className={classes.container}>
+			<Grid className={classes.wrapper}>
+				<Grid className={classes.teamsWrapper}>
 					<Title order={1}>Teams</Title>
 					<Button
 						onClick={() => {
@@ -109,30 +128,10 @@ const Home: NextPage = () => {
 						})}
 				</Grid>
 			</Grid>
-			<Grid
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'flex-start',
-					alignItems: 'flex-start',
-					padding: 8,
-					marginTop: 8,
-					width: '100%',
-				}}
-			>
+			<Grid className={classes.wrapper}>
 				<Title order={1}>Players</Title>
 
-				<Grid
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						justifyContent: 'flex-start',
-						alignItems: 'flex-start',
-						padding: 8,
-						marginTop: 8,
-						width: '100%',
-					}}
-				>
+				<Grid className={classes.playersWrapper}>
 					{loadingPlayers ? (
 						<LoaderContainer />
 					) : (

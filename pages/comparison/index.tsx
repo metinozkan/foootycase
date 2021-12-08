@@ -8,10 +8,66 @@ import { Center, Grid, SimpleGrid, Title, Text, Button, Image, Popover } from '@
 import { BrowserStorage } from '../../source/BrowserStorage';
 import { AiOutlinePlus } from 'react-icons/ai';
 
+import { createStyles } from '@mantine/core';
+
+const useStyles = createStyles((theme, _params, getRef) => {
+	return {
+		container: {
+			display: 'flex',
+			flexDirection: 'column',
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start',
+			padding: 8,
+			width: '100%',
+			paddingRight: 40,
+			paddingLeft: 40,
+		},
+
+		containerTop: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			padding: 8,
+			marginTop: 8,
+			width: '100%',
+		},
+
+		tableContainer: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'flex-start',
+			alignItems: 'flex-end',
+			padding: 8,
+			marginTop: 8,
+			position: 'relative',
+		},
+
+		tableLeftHeaders: {
+			display: 'flex',
+			flexDirection: 'column',
+			padding: 8,
+			marginTop: 8,
+			marginRight: 24,
+		},
+
+		tableRowWrapper: {
+			display: 'flex',
+			flexDirection: 'column',
+			padding: 8,
+			marginTop: 8,
+			marginRight: 20,
+		},
+	};
+});
+
 const Comparison = () => {
 	const router = useRouter();
+	const { classes } = useStyles();
+
 	const [popoverOpen, setPopoverOpen] = React.useState<boolean>(false);
-	const comparisonPlayerObjectsFromStorage: any[] = BrowserStorage.getItem('comparisonPlayers');
+	const comparisonPlayerObjectsFromStorage: any[] | null =
+		BrowserStorage.getItem('comparisonPlayers');
 
 	const [selectedFavoritePlayer, setSelectedFavoritePlayer] = React.useState<any[]>([]);
 
@@ -85,71 +141,20 @@ const Comparison = () => {
 	};
 
 	return (
-		<Center
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				justifyContent: 'flex-start',
-				alignItems: 'flex-start',
-				padding: 8,
-				width: '100%',
-				paddingRight: 40,
-				paddingLeft: 40,
-			}}
-		>
-			<Grid
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'flex-start',
-					alignItems: 'flex-start',
-					padding: 8,
-					marginTop: 8,
-					width: '100%',
-				}}
-			>
-				<Grid
-					style={{
-						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						padding: 8,
-						marginTop: 8,
-						width: '100%',
+		<Center className={classes.container}>
+			<Grid className={classes.containerTop}>
+				<Title order={1}>Comparison</Title>
+				<Button
+					onClick={() => {
+						router.push('/');
 					}}
 				>
-					<Title order={1}>Comparison</Title>
-					<Button
-						onClick={() => {
-							router.push('/');
-						}}
-					>
-						Go Home
-					</Button>
-				</Grid>
+					Go Home
+				</Button>
 			</Grid>
 
-			<Grid
-				style={{
-					display: 'flex',
-					flexDirection: 'row',
-					justifyContent: 'flex-start',
-					alignItems: 'flex-end',
-					padding: 8,
-					marginTop: 8,
-					position: 'relative',
-				}}
-			>
-				<Grid
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						padding: 8,
-						marginTop: 8,
-						marginRight: 24,
-					}}
-				>
+			<Grid className={classes.tableContainer}>
+				<Grid className={classes.tableLeftHeaders}>
 					<Text color="gray">Index</Text>
 					<Text color="gray">Goals</Text>
 					<Text color="gray">Asists</Text>
@@ -166,15 +171,7 @@ const Comparison = () => {
 				{selectedFavoritePlayer.length > 0 ? (
 					selectedFavoritePlayer.map((player, index) => {
 						return (
-							<Grid
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-									padding: 8,
-									marginTop: 8,
-									marginRight: 20,
-								}}
-							>
+							<Grid className={classes.tableRowWrapper}>
 								<div
 									style={{
 										display: 'flex',

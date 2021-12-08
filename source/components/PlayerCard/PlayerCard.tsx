@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import superagent from 'superagent';
 
 import { Grid, Image, Title, Col, Button, createStyles, Collapse, ActionIcon } from '@mantine/core';
-import CustomColComponent from './CustomColComponent';
 import StatsCard from './StatsCard';
 import { PlayerDetail, Stats } from '../../types/types';
 import LoaderContainer from '../LoaderContainer';
@@ -17,6 +16,8 @@ const useStyles = createStyles((theme) => ({
 			// Type safe child reference in nested selectors via ref
 			display: 'none',
 		},
+
+		image: {},
 	},
 }));
 
@@ -29,7 +30,6 @@ const PlayerCard = ({ playerDetail, Favorites }: PlayerCardProps) => {
 	const { classes } = useStyles();
 	const [opened, setOpen] = useState(false);
 	const [stats, setStats] = useState<Stats>();
-	const [selectedPlayer, setSelectedPlayer] = useState<number>();
 	const [loading, setLoading] = useState(false);
 
 	const imageColor =
@@ -69,7 +69,6 @@ const PlayerCard = ({ playerDetail, Favorites }: PlayerCardProps) => {
 	const openStatsArea = (playerId: number) => {
 		if (!opened) {
 			setLoading(true);
-			setSelectedPlayer(playerId);
 			setOpen(true);
 			getStats(playerId);
 		} else {
