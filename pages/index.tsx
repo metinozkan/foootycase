@@ -8,6 +8,7 @@ import TeamCard from '../source/components/TeamCard';
 import superagent from 'superagent';
 import { PlayerDetail, TeamDetail } from '../source/types/types';
 import LoaderContainer from '../source/components/LoaderContainer';
+import { BrowserStorage } from '../source/BrowserStorage';
 
 const Home: NextPage = () => {
 	const router = useRouter();
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
 
 	const [teams, setTeamms] = React.useState<TeamDetail[]>();
 	const [players, setPlayers] = React.useState<PlayerDetail[]>();
+	const localStorageComparisonPlayers: any[] | null = BrowserStorage.getItem('comparisonPlayers');
 
 	const getTeams = () => {
 		superagent

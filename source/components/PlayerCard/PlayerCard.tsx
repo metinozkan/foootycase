@@ -109,6 +109,15 @@ const PlayerCard = ({ playerDetail, Favorites }: PlayerCardProps) => {
 		}
 	};
 
+	React.useEffect(() => {
+		const localStorageComparisonPlayers: any[] | null =
+			BrowserStorage.getItem('comparisonPlayers');
+
+		if (localStorageComparisonPlayers) {
+			localStorageComparisonPlayers.map((item) => FavoriteAction.addFavorite(item.id));
+		} else {
+		}
+	}, []);
 	return (
 		<>
 			<Grid
