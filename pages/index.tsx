@@ -117,9 +117,10 @@ const Home: NextPage = () => {
 				</Grid>
 				<Grid>
 					{teams &&
-						teams.map((team: TeamDetail) => {
+						teams.map((team: TeamDetail, index) => {
 							return (
 								<TeamCard
+									key={index}
 									teamDetail={team}
 									setSelectedTeam={setSelectedTeam}
 									selectedTeam={selectedTeam}
@@ -136,8 +137,8 @@ const Home: NextPage = () => {
 						<LoaderContainer />
 					) : (
 						players &&
-						players.map((player: PlayerDetail) => {
-							return <PlayerCard playerDetail={player} />;
+						players.map((player: PlayerDetail, index) => {
+							return <PlayerCard key={index} playerDetail={player} />;
 						})
 					)}
 				</Grid>

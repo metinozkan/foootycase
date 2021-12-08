@@ -91,7 +91,7 @@ const Comparison = () => {
 							height: 50,
 							width: 50,
 							background: 'gray',
-							borderRadius: 25,
+							borderRadius: 11,
 							cursor: 'pointer',
 						}}
 						className="rowFlexCenter"
@@ -108,9 +108,10 @@ const Comparison = () => {
 			>
 				<div style={{ display: 'flex', width: '100%', flexDirection: 'column' }}>
 					{comparisonPlayerObjectsFromStorage &&
-						comparisonPlayerObjectsFromStorage.map((item) => {
+						comparisonPlayerObjectsFromStorage.map((item, index) => {
 							return (
 								<Grid
+									key={index}
 									style={{
 										display: 'flex',
 										flexDirection: 'column',
@@ -171,7 +172,7 @@ const Comparison = () => {
 				{selectedFavoritePlayer.length > 0 ? (
 					selectedFavoritePlayer.map((player, index) => {
 						return (
-							<Grid className={classes.tableRowWrapper}>
+							<Grid key={index} className={classes.tableRowWrapper}>
 								<div
 									style={{
 										display: 'flex',
