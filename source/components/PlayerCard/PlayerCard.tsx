@@ -9,6 +9,7 @@ import LoaderContainer from '../LoaderContainer';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { connect } from 'react-redux';
 import { FavoriteAction } from '../../data/actions/FavoriteAction';
+import { BrowserStorage } from '../../BrowserStorage';
 
 const useStyles = createStyles((theme) => ({
 	hiddenMd: {
@@ -46,16 +47,21 @@ const PlayerCard = ({ playerDetail, Favorites }: PlayerCardProps) => {
 		: '';
 	const noInformationForCountry = birthCountryName == '' && passportCountryName == '';
 
-	const getStats = (playerId: number) => {
-		superagent
-			.get(` https://mock-foooty-api.herokuapp.com/players/${playerId}/stats`)
+	const getStats = async (playerId: number) => {
+		return superagent
+			.get(`https://mock-foooty-api.herokuapp.com/players/${playerId}/stats`)
 			.set('Accept', 'application/json')
-			.end((error, response) => {
-				if (error) {
-					setLoading(false);
-					return;
-				}
+			.then((response) => {
+				// if (error) {
+				// 	setLoading(false);
+				// 	return;
+				// }
 				setStats(response.body.stats);
+				setLoading(false);
+
+				return response.body.stats;
+			})
+			.catch((err) => {
 				setLoading(false);
 			});
 	};
@@ -70,7 +76,39 @@ const PlayerCard = ({ playerDetail, Favorites }: PlayerCardProps) => {
 			setOpen(false);
 		}
 	};
-	console.log('Favorite', Favorites);
+
+	const createComparisonPlayerObject = async () => {
+		var stats = await getStats(playerDetail.id);
+		const object = {
+			id: playerDetail.id,
+			image: playerDetail.image,
+			firstName: playerDetail.firstName,
+			lastName: playerDetail.lastName,
+			stats: stats,
+		};
+
+		const localStorageComparisonPlayers: any[] | null =
+			BrowserStorage.getItem('comparisonPlayers');
+
+		if (localStorageComparisonPlayers) {
+			BrowserStorage.setItem('comparisonPlayers', [...localStorageComparisonPlayers, object]);
+		} else {
+			BrowserStorage.setItem('comparisonPlayers', [object]);
+		}
+	};
+
+	const deleteComparisonPlayerObjectFromStorage = () => {
+		const localStorageComparisonPlayers: any[] | null =
+			BrowserStorage.getItem('comparisonPlayers');
+
+		if (localStorageComparisonPlayers) {
+			BrowserStorage.setItem('comparisonPlayers', [
+				...localStorageComparisonPlayers.filter((item) => item.id != playerDetail.id),
+			]);
+		} else {
+		}
+	};
+
 	return (
 		<>
 			<Grid
@@ -125,12 +163,14 @@ const PlayerCard = ({ playerDetail, Favorites }: PlayerCardProps) => {
 
 				<Col span={2}>
 					<ActionIcon
-						onClick={(e: React.MouseEvent) => {
+						onClick={async (e: React.MouseEvent) => {
 							e.stopPropagation();
-							if (Favorites.indexOf(playerDetail.id) == -1)
+							if (Favorites.indexOf(playerDetail.id) == -1) {
 								FavoriteAction.addFavorite(playerDetail.id);
-							else {
+								createComparisonPlayerObject();
+							} else {
 								FavoriteAction.deleteFavorite(playerDetail.id);
+								deleteComparisonPlayerObjectFromStorage();
 							}
 						}}
 					>

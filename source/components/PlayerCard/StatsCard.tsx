@@ -8,7 +8,6 @@ interface StatsCardProps {
 }
 
 const StatsRow = ({ title, value, color }: { title: string; value: number; color?: string }) => {
-	console.log('title', title, value);
 	return (
 		<Grid className="rowFlexSpaceBetween">
 			<Text color={color ? color : 'gray'}>{title}</Text>
