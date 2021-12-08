@@ -16,4 +16,4 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 
 ## ScreenRecorder
 
-<img src="./forReadme/foootycaseGif.gif" width="950" height="850"/>
+<img src="./forReadme/foootycaseGif.gif" width="850" height="500"/>
