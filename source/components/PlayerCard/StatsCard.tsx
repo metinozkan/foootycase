@@ -1,5 +1,4 @@
 import { Grid, Col, Text } from '@mantine/core';
-import e from 'cors';
 import React from 'react';
 import { Stats } from '../../types/types';
 
